@@ -97,13 +97,7 @@ namespace TryApp
 
             Y_bar = (((A1 * Y1) + (A2 * Y2)) /(A1+A2));
 
-            //Error occuring with the formulae below. Ixx is coming out to be 0
-            //Ixx1 = 1 / 12 * ((tw * (Math.Pow(hw, 3))) + ((hw * tw) * (Math.Pow((Y_bar - Y2), 2))));
-            //Ixx2 = 1 / 12 * ((bf * (Math.Pow(tf, 3))) + ((bf * tf) * (Math.Pow((-Y_bar + tf / 2), 2))));
 
-            //Formulae as per Rulebook
-            //Ixx1 =  (((1 / 12) * (tw * hw * hw * hw)) +((Y_bar - (hw / 2)) * (Y_bar - (hw / 2)) * (hw * tw)));
-            //Ixx2 =  (((1 / 12) * (bf * tf * tf * tf)) + ((hw+(tf / 2)-Y_bar) * (hw+(tf / 2) - Y_bar) * (bf * tf)));
             Ixx1 = ((tw * Math.Pow(hw,3))/12) + ((Y_bar - (hw / 2)) * (Y_bar - (hw / 2)) * (hw * tw));
             Ixx2 =  ((bf * Math.Pow(tf, 3)) /12) + ((hw + (tf / 2) - Y_bar) * (hw + (tf / 2) - Y_bar) * (bf * tf));
 
