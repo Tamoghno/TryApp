@@ -7,7 +7,7 @@ namespace TryApp
     {
         static void Main(string[] args)
         {
-            double webLength, bulbSectionThickness;
+            double webLength, bulbSectionThickness, csa;
             string input;
             string input1;
 
@@ -23,7 +23,8 @@ namespace TryApp
 
             //Output of Conversion from bulb to angled section
             double[] values = Converter(webLength, bulbSectionThickness);
-            Console.WriteLine($"The values are \n Length of web (AS): {Math.Round(values[0],2)} mm,\n Thickness of web: {Math.Round(values[3],2)} mm, \n Length of flange: {Math.Round(values[1],2)} mm, \n Thickness of flange: {Math.Round(values[2], 2)} mm");
+            Console.WriteLine($"The values are \n Length of web (AS): {Math.Round(values[0],2)} mm," +
+                $"\n Thickness of web: {Math.Round(values[3],2)} mm, \n Length of flange: {Math.Round(values[1],2)} mm, \n Thickness of flange: {Math.Round(values[2], 2)} mm, \n Cross-Sectional Area: {Math.Round(values[4],2)} mm^2");
 
             //Continuation prompt
             Console.WriteLine("Do you want to calculate area moment of inertia [y/n]?");
@@ -60,8 +61,8 @@ namespace TryApp
        
         public static double[] Converter(double hw, double tw)  //Function to convert bulb sections params to angled ones
         {
-            double angleLength, angleBreadth, webThickness, flangeThickness, alpha;
-            double[] values = new double[4];
+            double angleHeight, angleBreadth, webThickness, flangeThickness, alpha, csa;
+            double[] values = new double[5];
 
             if(hw <= 120)
             {
@@ -72,15 +73,17 @@ namespace TryApp
                 alpha = 1;
             }
             //All formulae derived from Rulebook
-            angleLength = hw + 2 - hw / 9.2;
-            angleBreadth = alpha * (tw - 2 + (hw / 9.2));
-            flangeThickness = (hw / 9.2) - 2;
-            webThickness = tw;
+            angleHeight = hw + 2 - hw / 9.2; //hw
+            angleBreadth = alpha * (tw - 2 + (hw / 6.7)); //bf
+            flangeThickness = (hw / 9.2) - 2; //tf
+            webThickness = tw; //tw
+            csa = (angleHeight * tw) + (angleBreadth*flangeThickness);
 
-            values[0] = angleLength;
-            values[1] = angleBreadth;
-            values[2] = flangeThickness;
-            values[3] = webThickness;
+            values[0] = angleHeight; //0 = hw
+            values[1] = angleBreadth; //1 = bf
+            values[2] = flangeThickness; //2 = tf
+            values[3] = webThickness; // 3 = tw
+            values[4] = csa;
 
             return values;
         }
@@ -101,12 +104,15 @@ namespace TryApp
             //Ixx2 = 1 / 12 * ((bf * (Math.Pow(tf, 3))) + ((bf * tf) * (Math.Pow((-Y_bar + tf / 2), 2))));
 
             //Formulae as per Rulebook
-            Ixx1 =  (((1 / 12) * (tw * hw * hw * hw)) +((Y_bar - (hw / 2)) * (Y_bar - (hw / 2)) * (hw * tw)));
-            Ixx2 =  (((1 / 12) * (bf * tf * tf * tf)) + (((tf / 2)-Y_bar) * ((tf / 2) - Y_bar) * (bf * tf)));
+            //Ixx1 =  (((1 / 12) * (tw * hw * hw * hw)) +((Y_bar - (hw / 2)) * (Y_bar - (hw / 2)) * (hw * tw)));
+            //Ixx2 =  (((1 / 12) * (bf * tf * tf * tf)) + ((hw+(tf / 2)-Y_bar) * (hw+(tf / 2) - Y_bar) * (bf * tf)));
+            Ixx1 = ((tw * Math.Pow(hw,3))/12) + ((Y_bar - (hw / 2)) * (Y_bar - (hw / 2)) * (hw * tw));
+            Ixx2 =  ((bf * Math.Pow(tf, 3)) /12) + ((hw + (tf / 2) - Y_bar) * (hw + (tf / 2) - Y_bar) * (bf * tf));
+
             Ixx = Ixx1 + Ixx2;
 
-            moments[0] = Y_bar;
-            moments[1] = Ixx;
+            moments[0] = Math.Round(Y_bar,2);
+            moments[1] = Math.Round(Ixx,2);
 
             return moments;
         }
