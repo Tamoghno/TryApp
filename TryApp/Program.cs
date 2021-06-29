@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 
 namespace TryApp
@@ -61,8 +61,8 @@ namespace TryApp
        
         public static double[] Converter(double hw, double tw)  //Function to convert bulb sections params to angled ones
         {
-            double angleHeight, angleBreadth, webThickness, flangeThickness, alpha, csa;
-            double[] values = new double[5];
+            double angleLength, angleBreadth, webThickness, flangeThickness, alpha;
+            double[] values = new double[4];
 
             if(hw <= 120)
             {
@@ -73,17 +73,15 @@ namespace TryApp
                 alpha = 1;
             }
             //All formulae derived from Rulebook
-            angleHeight = hw + 2 - hw / 9.2; //hw
-            angleBreadth = alpha * (tw - 2 + (hw / 6.7)); //bf
-            flangeThickness = (hw / 9.2) - 2; //tf
-            webThickness = tw; //tw
-            csa = (angleHeight * tw) + (angleBreadth*flangeThickness);
+            angleLength = hw + 2 - hw / 9.2;
+            angleBreadth = alpha * (tw - 2 + (hw / 9.2));
+            flangeThickness = (hw / 9.2) - 2;
+            webThickness = tw;
 
-            values[0] = angleHeight; //0 = hw
-            values[1] = angleBreadth; //1 = bf
-            values[2] = flangeThickness; //2 = tf
-            values[3] = webThickness; // 3 = tw
-            values[4] = csa;
+            values[0] = angleLength;
+            values[1] = angleBreadth;
+            values[2] = flangeThickness;
+            values[3] = webThickness;
 
             return values;
         }
@@ -118,3 +116,4 @@ namespace TryApp
         }
     }
 }
+
