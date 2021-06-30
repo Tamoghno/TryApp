@@ -33,7 +33,7 @@ namespace TryApp
             {  //Display moment and centroid
 
                 double[] moments = momentCalculator(values[1], values[2], values[0], values[3]);
-                Console.WriteLine($"Centroid of angled section: {moments[0]} mm, \nArea moment of inertia about centroid: {moments[1]}mm^4");
+                Console.WriteLine($"Centroid of angled section: {moments[0]} mm, \nArea moment of inertia about centroid: {moments[1]}cm^4");
                 Console.Write("To exit program, press y: ");
                 input1 = Console.ReadLine();
                 if(input1 == "y")
@@ -106,7 +106,7 @@ namespace TryApp
             Ixx = Ixx1 + Ixx2;
 
             moments[0] = Math.Round(Y_bar,2);
-            moments[1] = Math.Round(Ixx,2);
+            moments[1] = Math.Round(Ixx/10000,2);
 
             return moments;
         }
